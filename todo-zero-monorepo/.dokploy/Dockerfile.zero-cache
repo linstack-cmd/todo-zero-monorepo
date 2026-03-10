@@ -1,6 +1,7 @@
-# Zero-cache server
-FROM node:22-alpine
+# Zero-cache server — needs glibc for native sqlite3 bindings
+FROM node:22-slim
 RUN corepack enable && corepack prepare pnpm@10.31.0 --activate
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json tsconfig.base.json ./
