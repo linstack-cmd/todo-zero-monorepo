@@ -1,0 +1,18 @@
+# Zero-cache server
+FROM node:22-alpine
+RUN corepack enable && corepack prepare pnpm@10.31.0 --activate
+WORKDIR /app
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json tsconfig.base.json ./
+COPY packages/shared/package.json packages/shared/
+COPY apps/server/package.json apps/server/
+
+RUN pnpm install --frozen-lockfile
+
+COPY packages/shared/ packages/shared/
+COPY apps/server/ apps/server/
+
+RUN mkdir -p /data
+
+EXPOSE 4848
+CMD ["npx", "zero-cache"]

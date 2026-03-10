@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.turbo/
+*.db
+*.db-journal
+.env
+.env.local
+.env.*.local
+out/
+*.tsbuildinfo
+*.js.map
+vite.config.js
+vite.config.d.ts
+vite.config.d.ts.map

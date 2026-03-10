@@ -1,0 +1,310 @@
+/*
+ * Flow CSS — A minimal, flow-based CSS system.
+ * Uses CSS custom properties, modern layout (flexbox/grid),
+ * and natural document flow for clean, composable styling.
+ *
+ * Philosophy: let content flow naturally, use spacing rhythm,
+ * and compose layouts from simple primitives.
+ */
+
+/* ===== Reset & Base ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Flow spacing scale */
+  --flow-space-xs: 0.25rem;
+  --flow-space-sm: 0.5rem;
+  --flow-space-md: 1rem;
+  --flow-space-lg: 1.5rem;
+  --flow-space-xl: 2rem;
+  --flow-space-2xl: 3rem;
+
+  /* Colors */
+  --flow-bg: #fafafa;
+  --flow-surface: #ffffff;
+  --flow-text: #1a1a2e;
+  --flow-text-muted: #6b7280;
+  --flow-accent: #6366f1;
+  --flow-accent-hover: #4f46e5;
+  --flow-border: #e5e7eb;
+  --flow-success: #10b981;
+  --flow-danger: #ef4444;
+
+  /* Typography */
+  --flow-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --flow-font-mono: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  --flow-text-sm: 0.875rem;
+  --flow-text-base: 1rem;
+  --flow-text-lg: 1.25rem;
+  --flow-text-xl: 1.5rem;
+  --flow-text-2xl: 2rem;
+
+  /* Radius */
+  --flow-radius-sm: 0.25rem;
+  --flow-radius-md: 0.5rem;
+  --flow-radius-lg: 0.75rem;
+  --flow-radius-full: 9999px;
+
+  /* Shadows */
+  --flow-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --flow-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --flow-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --flow-transition: 150ms ease;
+}
+
+body {
+  font-family: var(--flow-font);
+  font-size: var(--flow-text-base);
+  line-height: 1.6;
+  color: var(--flow-text);
+  background: var(--flow-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Flow Layout Primitives ===== */
+
+/* Stack: vertical flow with consistent spacing */
+.flow-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flow-space, var(--flow-space-md));
+}
+
+.flow-stack[data-space="sm"] { --flow-space: var(--flow-space-sm); }
+.flow-stack[data-space="lg"] { --flow-space: var(--flow-space-lg); }
+.flow-stack[data-space="xl"] { --flow-space: var(--flow-space-xl); }
+
+/* Row: horizontal flow */
+.flow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--flow-space, var(--flow-space-md));
+}
+
+.flow-row[data-align="start"] { align-items: flex-start; }
+.flow-row[data-align="stretch"] { align-items: stretch; }
+.flow-row[data-justify="between"] { justify-content: space-between; }
+.flow-row[data-justify="center"] { justify-content: center; }
+
+/* Center: centered content with max-width */
+.flow-center {
+  max-width: var(--flow-max, 42rem);
+  margin-inline: auto;
+  padding-inline: var(--flow-space-md);
+}
+
+/* ===== Component Styles ===== */
+
+/* Card */
+.flow-card {
+  background: var(--flow-surface);
+  border: 1px solid var(--flow-border);
+  border-radius: var(--flow-radius-lg);
+  padding: var(--flow-space-lg);
+  box-shadow: var(--flow-shadow-sm);
+}
+
+/* Input */
+.flow-input {
+  width: 100%;
+  padding: var(--flow-space-sm) var(--flow-space-md);
+  font-size: var(--flow-text-base);
+  font-family: var(--flow-font);
+  border: 1px solid var(--flow-border);
+  border-radius: var(--flow-radius-md);
+  background: var(--flow-surface);
+  color: var(--flow-text);
+  transition: border-color var(--flow-transition), box-shadow var(--flow-transition);
+}
+
+.flow-input:focus {
+  outline: none;
+  border-color: var(--flow-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.flow-input::placeholder {
+  color: var(--flow-text-muted);
+}
+
+/* Button */
+.flow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--flow-space-xs);
+  padding: var(--flow-space-sm) var(--flow-space-md);
+  font-size: var(--flow-text-sm);
+  font-family: var(--flow-font);
+  font-weight: 500;
+  border: 1px solid var(--flow-border);
+  border-radius: var(--flow-radius-md);
+  background: var(--flow-surface);
+  color: var(--flow-text);
+  cursor: pointer;
+  transition: all var(--flow-transition);
+  user-select: none;
+}
+
+.flow-btn:hover {
+  background: var(--flow-bg);
+  border-color: var(--flow-text-muted);
+}
+
+.flow-btn[data-variant="primary"] {
+  background: var(--flow-accent);
+  border-color: var(--flow-accent);
+  color: white;
+}
+
+.flow-btn[data-variant="primary"]:hover {
+  background: var(--flow-accent-hover);
+}
+
+.flow-btn[data-variant="ghost"] {
+  background: transparent;
+  border-color: transparent;
+}
+
+.flow-btn[data-variant="ghost"]:hover {
+  background: var(--flow-bg);
+}
+
+.flow-btn[data-variant="danger"] {
+  color: var(--flow-danger);
+  border-color: var(--flow-danger);
+}
+
+.flow-btn[data-variant="danger"]:hover {
+  background: var(--flow-danger);
+  color: white;
+}
+
+/* Checkbox */
+.flow-checkbox {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--flow-border);
+  border-radius: var(--flow-radius-sm);
+  cursor: pointer;
+  transition: all var(--flow-transition);
+  flex-shrink: 0;
+}
+
+.flow-checkbox:checked {
+  background: var(--flow-accent);
+  border-color: var(--flow-accent);
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+}
+
+/* Badge / pill */
+.flow-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: var(--flow-text-sm);
+  font-weight: 500;
+  border-radius: var(--flow-radius-full);
+  background: var(--flow-bg);
+  color: var(--flow-text-muted);
+}
+
+.flow-badge[data-active="true"] {
+  background: var(--flow-accent);
+  color: white;
+}
+
+/* ===== App-specific ===== */
+
+.app-header {
+  padding: var(--flow-space-xl) 0;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: var(--flow-text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.app-header p {
+  color: var(--flow-text-muted);
+  font-size: var(--flow-text-sm);
+  margin-top: var(--flow-space-xs);
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: var(--flow-space-md);
+  padding: var(--flow-space-sm) 0;
+  border-bottom: 1px solid var(--flow-border);
+  transition: opacity var(--flow-transition);
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item[data-completed="true"] .todo-title {
+  text-decoration: line-through;
+  color: var(--flow-text-muted);
+}
+
+.todo-title {
+  flex: 1;
+  font-size: var(--flow-text-base);
+}
+
+.todo-input-row {
+  display: flex;
+  gap: var(--flow-space-sm);
+}
+
+.todo-input-row .flow-input {
+  flex: 1;
+}
+
+.todo-filters {
+  display: flex;
+  gap: var(--flow-space-xs);
+  justify-content: center;
+}
+
+.todo-count {
+  font-size: var(--flow-text-sm);
+  color: var(--flow-text-muted);
+  text-align: center;
+}
+
+.sync-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--flow-space-xs);
+  font-size: var(--flow-text-sm);
+  color: var(--flow-success);
+}
+
+.sync-indicator::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

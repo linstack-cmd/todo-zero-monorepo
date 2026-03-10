@@ -1,0 +1,38 @@
+{
+  "name": "@todo/desktop",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "electron .",
+    "build": "electron-builder --dir",
+    "dist": "electron-builder",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'no linter configured yet'"
+  },
+  "dependencies": {
+    "@todo/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.0",
+    "typescript": "^5.8.0"
+  },
+  "build": {
+    "appId": "com.todozero.desktop",
+    "productName": "Todo Zero",
+    "files": ["src/**/*"],
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

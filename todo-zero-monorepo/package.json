@@ -1,0 +1,27 @@
+{
+  "name": "todo-zero-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "dev:db": "docker compose -f docker/docker-compose.dev.yml up -d",
+    "dev:db:down": "docker compose -f docker/docker-compose.dev.yml down",
+    "dev:zero-cache": "pnpm --filter @todo/server dev:zero-cache",
+    "dev:web": "pnpm --filter @todo/web dev",
+    "dev:desktop": "pnpm --filter @todo/desktop dev",
+    "dev:server": "pnpm --filter @todo/server dev",
+    "dev:all": "concurrently -n db,zero,server,web -c blue,green,yellow,cyan \"pnpm dev:db\" \"sleep 3 && pnpm dev:zero-cache\" \"sleep 5 && pnpm dev:server\" \"sleep 5 && pnpm dev:web\"",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "concurrently": "^9.1.0",
+    "typescript": "^5.8.0"
+  },
+  "packageManager": "pnpm@10.31.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

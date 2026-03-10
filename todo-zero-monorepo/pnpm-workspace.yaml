@@ -1,0 +1,10 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  '@rocicorp/zero-sqlite3': false
+  electron: false
+  electron-winstaller: false
+  esbuild: false
+  protobufjs: false
+approveBuildsAllowlist: '@rocicorp/zero-sqlite3,electron,esbuild,protobufjs'

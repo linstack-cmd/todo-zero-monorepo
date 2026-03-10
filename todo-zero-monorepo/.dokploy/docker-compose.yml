@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-todo_zero}
+    command: postgres -c wal_level=logical
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zero-cache:
+    build:
+      context: ..
+      dockerfile: .dokploy/Dockerfile.zero-cache
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ZERO_UPSTREAM_DB: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-todo_zero}
+      ZERO_REPLICA_FILE: /data/zero_replica.db
+      ZERO_AUTH_SECRET: ${ZERO_AUTH_SECRET:?Set ZERO_AUTH_SECRET}
+    ports:
+      - "4848:4848"
+    volumes:
+      - zero_data:/data
+
+  server:
+    build:
+      context: ..
+      dockerfile: .dokploy/Dockerfile.server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ZERO_UPSTREAM_DB: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-todo_zero}
+      ZERO_AUTH_SECRET: ${ZERO_AUTH_SECRET}
+      PORT: 3001
+    ports:
+      - "3001:3001"
+
+  web:
+    build:
+      context: ..
+      dockerfile: .dokploy/Dockerfile.web
+      args:
+        VITE_PUBLIC_SERVER: ${VITE_PUBLIC_SERVER:-http://localhost:4848}
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+
+volumes:
+  pg_data:
+  zero_data:
