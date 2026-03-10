@@ -8,8 +8,10 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json tsconfig.base.js
 COPY packages/shared/package.json packages/shared/
 COPY apps/server/package.json apps/server/
 
-RUN pnpm install --frozen-lockfile
-RUN pnpm rebuild @rocicorp/zero-sqlite3
+# Cache bust: v2 - force fresh install with native bindings
+RUN pnpm install --frozen-lockfile && \
+    pnpm rebuild @rocicorp/zero-sqlite3 && \
+    ls -la node_modules/.pnpm/@rocicorp+zero-sqlite3*/node_modules/@rocicorp/zero-sqlite3/build/ || true
 
 COPY packages/shared/ packages/shared/
 COPY apps/server/ apps/server/
