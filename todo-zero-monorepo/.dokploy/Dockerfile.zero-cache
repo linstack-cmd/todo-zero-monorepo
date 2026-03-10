@@ -15,4 +15,4 @@ COPY apps/server/ apps/server/
 RUN mkdir -p /data
 
 EXPOSE 4848
-CMD ["pnpm", "exec", "zero-cache"]
+CMD ["pnpm", "--filter", "@todo/server", "exec", "zero-cache"]
