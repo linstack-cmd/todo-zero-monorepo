@@ -27,6 +27,7 @@ services:
       ZERO_CHANGE_DB: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-todo_zero}
       ZERO_REPLICA_FILE: /data/zero.db
       ZERO_AUTH_SECRET: ${ZERO_AUTH_SECRET:?Set ZERO_AUTH_SECRET}
+      ZERO_ADMIN_PASSWORD: ${ZERO_ADMIN_PASSWORD:-admin123}
     expose:
       - "4848"
     volumes:
