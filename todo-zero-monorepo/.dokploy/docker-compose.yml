@@ -16,18 +16,16 @@ services:
       retries: 5
 
   zero-cache:
-    build:
-      context: ..
-      dockerfile: .dokploy/Dockerfile.zero-cache
-      args:
-        CACHEBUST: "2026-03-10-v1"
+    image: rocicorp/zero:0.25.13
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       ZERO_UPSTREAM_DB: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-todo_zero}
-      ZERO_REPLICA_FILE: /data/zero_replica.db
+      ZERO_CVR_DB: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-todo_zero}
+      ZERO_CHANGE_DB: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-todo_zero}
+      ZERO_REPLICA_FILE: /data/zero.db
       ZERO_AUTH_SECRET: ${ZERO_AUTH_SECRET:?Set ZERO_AUTH_SECRET}
     expose:
       - "4848"
