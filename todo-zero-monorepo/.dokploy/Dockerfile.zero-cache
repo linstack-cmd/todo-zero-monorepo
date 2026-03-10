@@ -11,9 +11,12 @@ COPY apps/server/package.json apps/server/
 # Cache bust arg to force fresh install
 ARG CACHEBUST=1
 RUN pnpm install --frozen-lockfile 2>&1 && \
+    echo "=== Running native module rebuild ===" && \
+    cd /app/node_modules/.pnpm/@rocicorp+zero-sqlite3@1.0.15/node_modules/@rocicorp/zero-sqlite3 && \
+    node-gyp rebuild --release 2>&1 && \
     echo "=== Checking for native bindings ===" && \
     find /app -name 'better_sqlite3.node' 2>/dev/null && \
-    echo "=== Done ===" || true
+    echo "=== Done ==="
 
 COPY packages/shared/ packages/shared/
 COPY apps/server/ apps/server/
